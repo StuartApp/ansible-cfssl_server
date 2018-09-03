@@ -1,0 +1,45 @@
+---
+
+- name: "Check if cfssl is installed"
+  stat:
+    path: "/usr/local/bin/cfssl"
+  register: cfssl_server_installed
+  check_mode: no
+
+- name: "Get current cfssl version"
+  shell: /usr/local/bin/cfssl version | grep  "^Version" | awk '{print $NF}'
+  register: cfssl_server_current_version
+  check_mode: no
+  when: cfssl_server_installed.stat.exists
+
+- name: "Download cfssl"
+  get_url:
+    url: "{{ cfssl_server_cfssl_url }}"
+    dest: /usr/local/bin/cfssl
+    mode: 0755
+  when: (not cfssl_server_installed.stat.exists) or (cfssl_server_installed.stat.exists and cfssl_server_version is version_compare(cfssl_server_current_version.stdout, '>'))
+
+- name: "Download cfssljson"
+  get_url:
+    url: "{{ cfssl_server_cfssljson_url }}"
+    dest: /usr/local/bin/cfssljson
+    mode: 0755
+  when: (not cfssl_server_installed.stat.exists) or (cfssl_server_installed.stat.exists and cfssl_server_version is version_compare(cfssl_server_current_version.stdout, '>'))
+
+- name: Install systemd unit
+  template:
+    src: cfssl.service.j2
+    dest: /etc/systemd/system/cfssl.service
+    owner: root
+    group: root
+    mode: 0640
+  notify: restart cfssl
+
+- name: Reread Systemd configs
+  systemd: daemon_reload=yes
+
+- name: Enable systemd unit
+  systemd:
+    name: cfssl
+    enabled: "{{ cfssl_server_service_enabled }}"
+    masked: no

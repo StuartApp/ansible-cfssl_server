@@ -1,0 +1,21 @@
+---
+
+- name: Create configuration dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ cfssl_server_user }}"
+    group: "{{ cfssl_server_group }}"
+  with_items:
+    - "{{ cfssl_server_configdir }}"
+
+- name: Setup configuration
+  template:
+    src: cfssl.json.j2
+    dest: "{{ cfssl_server_configdir }}/config.json"
+    owner: "{{ cfssl_server_user }}"
+    group: "{{ cfssl_server_group }}"
+    mode: 0600
+  notify: restart cfssl
+  no_log: true

@@ -1,0 +1,12 @@
+[Unit]
+Description=cfssl server
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+ExecStart=/usr/local/bin/cfssl serve -config={{ cfssl_server_configdir }}/config.json -ca={{ cfssl_server_configdir }}/ca.pem  -ca-key={{ cfssl_server_configdir }}/ca-key.pem -address={{ cfssl_server_address }} -port={{ cfssl_server_port }} -tls-cert={{ cfssl_server_configdir }}/server.pem -tls-key={{ cfssl_server_configdir }}/server-key.pem
+
+[Install]
+WantedBy=multi-user.target

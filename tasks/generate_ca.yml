@@ -1,0 +1,17 @@
+---
+
+- name: Create ca generation configuration
+  template:
+    src: ca-csr.json.j2
+    dest: "{{ cfssl_server_configdir }}/ca-csr.json"
+    owner: "{{ cfssl_server_user }}"
+    group: "{{ cfssl_server_group }}"
+    mode: 0644
+
+- name: Generate CA
+  shell: cfssl genkey -initca ca-csr.json | cfssljson -bare ca
+  args:
+    chdir: "{{ cfssl_server_configdir }}"
+    creates: "{{ cfssl_server_configdir}}/ca-key.pem"
+  become: true
+  become_user: "{{ cfssl_server_user }}"

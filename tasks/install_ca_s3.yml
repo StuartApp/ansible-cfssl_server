@@ -1,0 +1,19 @@
+---
+
+- name: Get CA cert from S3
+  s3:
+    bucket: "{{ cfssl_server_ca_s3_bucket }}"
+    object: "{{ cfssl_server_ca_s3_path }}/{{ cfssl_server_ca_s3_ca }}"
+    dest: "{{ cfssl_server_configdir }}/ca.pem"
+    mode: get
+  notify: restart cfssl
+
+- name: Get CA cert key from S3
+  s3:
+    bucket: "{{ cfssl_server_ca_s3_bucket }}"
+    object: "{{ cfssl_server_ca_s3_path }}/{{ cfssl_server_ca_s3_ca_key }}"
+    dest: "{{ cfssl_server_configdir }}/ca-key.pem"
+    mode: get
+  notify: restart cfssl
+  no_log: true
+

@@ -1,0 +1,83 @@
+---
+
+cfssl_server_version: 1.2
+cfssl_server_os: linux
+cfssl_server_arch: amd64
+cfssl_server_cfssl_url: "https://pkg.cfssl.org/R{{ cfssl_server_version }}/cfssl_{{ cfssl_server_os }}-{{ cfssl_server_arch }}"
+cfssl_server_cfssljson_url: "https://pkg.cfssl.org/R{{ cfssl_server_version }}/cfssljson_{{ cfssl_server_os }}-{{ cfssl_server_arch }}"
+
+cfssl_server_configdir: /etc/cfssl
+cfssl_server_user: root
+cfssl_server_group: root
+
+cfssl_server_address: 127.0.0.1
+cfssl_server_port: 8888
+
+cfssl_server_service_enabled: true
+
+# Possible values: vars, generated, s3 or none
+cfssl_server_ca_from: generated
+
+# if cfssl_server_ca_from == vars we have to define these two:
+cfssl_server_ca: ""
+cfssl_server_ca_key: ""
+
+# if cfssl_server_ca_from == generated we have to define something like this:
+cfssl_server_ca_generated_config:
+  cn: "Automatic Generated CA"
+  algo: rsa # Optional, default rsa
+  size: 2048 # Optional, default 2048
+  country: US
+  state: California
+  city: San Francisco
+  organization: Acme Inc.
+  organizationalunit: Acme
+
+# if cfssl_server_ca_from == s3 we have to define these:
+cfssl_server_ca_s3_bucket: certitifacates_bucket
+cfssl_server_ca_s3_path: /cfssl_ca
+cfssl_server_ca_s3_ca: ca.pem
+cfssl_server_ca_s3_ca_key: ca-key.pem
+
+# Hostnames for the self signed certificate for the cfss server itself, so it
+# can serve using HTTPS
+cfssl_server_selfcertificate_hostnames: "localhost,127.0.0.1,cfssl-server"
+cfssl_server_selfcertificate_algo: rsa
+cfssl_server_selfcertificate_size: 2048
+
+# CHANGE THIS!
+cfssl_server_auth_key: "9a618248b64db62d15b300a07b00580b"
+cfssl_server_config:
+  signing:
+    profiles:
+      CA:
+        usages:
+          - cert sign
+        expiry: 720h
+        auth_key: ca-auth
+      server:
+        expiry: 87600h
+        usages:
+          - signing
+          - key encipherment
+          - server auth
+          - client auth
+        auth_key: ca-auth
+      client:
+        expiry: 87600h
+        usages:
+          - signing
+          - key encipherment
+          - client auth
+        auth_key: ca-auth
+    default:
+      usages:
+        - server auth
+        - client auth
+      expiry: 8000h
+      auth_key: ca-auth
+  auth_keys:
+    ca-auth:
+      type: standard
+      key: "{{ cfssl_server_auth_key }}"
+

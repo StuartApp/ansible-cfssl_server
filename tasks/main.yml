@@ -1,0 +1,15 @@
+
+- include_tasks: install.yml
+- include_tasks: configure.yml
+
+- include_tasks: generate_ca.yml
+  when: cfssl_server_ca_from == "generated"
+- include_tasks: install_ca.yml
+  when: cfssl_server_ca_from == "vars"
+- include_tasks: install_ca_s3.yml
+  when: cfssl_server_ca_from == "s3"
+
+- include_tasks: self_certificate.yml
+
+- meta: flush_handlers
+

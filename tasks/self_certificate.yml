@@ -1,0 +1,12 @@
+---
+
+- name: Generate self certificate
+  shell: echo '{"CN":"Cfssl Server","hosts":[""],"key":{"algo":"{{ cfssl_server_selfcertificate_algo }}","size":{{ cfssl_server_selfcertificate_size }}}}' | \
+           cfssl gencert -config={{ cfssl_server_configdir }}/config.json -ca={{ cfssl_server_configdir }}/ca.pem  \
+             -ca-key={{ cfssl_server_configdir }}/ca-key.pem -profile=server \
+             -hostname="{{ cfssl_server_selfcertificate_hostnames }}" - | cfssljson -bare server
+  args:
+    chdir: "{{ cfssl_server_configdir }}"
+    creates: "{{ cfssl_server_configdir}}/server-key.pem"
+  become: true
+  become_user: "{{ cfssl_server_user }}"

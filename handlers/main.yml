@@ -1,0 +1,15 @@
+---
+
+- name: restart cfssl
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: cfssl
+  when: cfssl_server_service_enabled
+
+- name: start cfssl
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: cfssl
+  when: cfssl_server_service_enabled

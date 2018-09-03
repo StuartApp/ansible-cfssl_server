@@ -1,0 +1,17 @@
+{
+    "CN": "{{ cfssl_server_ca_generated_config.cn }}",
+    "key": {
+        "algo": "{{ cfssl_server_ca_generated_config.algo | default('rsa') }}",
+        "size": {{ cfssl_server_ca_generated_config.size | default('2048') }}
+    },
+    "names": [
+        {
+            "C": "{{ cfssl_server_ca_generated_config.country }}",
+            "ST": "{{ cfssl_server_ca_generated_config.state }}",
+            "L": "{{ cfssl_server_ca_generated_config.city }}",
+            "O": "{{ cfssl_server_ca_generated_config.organization }}",
+            "OU": "{{ cfssl_server_ca_generated_config.organizationalunit }}"
+        }
+    ]
+}
+

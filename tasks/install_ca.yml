@@ -1,0 +1,20 @@
+---
+
+- name: Install ca
+  copy:
+    dest: "{{ cfssl_server_configdir }}/ca.pem"
+    content: "{{ cfssl_server_ca }}"
+    owner: "{{ cfssl_server_user }}"
+    group: "{{ cfssl_server_group }}"
+    mode: 0644
+  notify: restart cfssl
+
+- name: Install ca key
+  copy:
+    dest: "{{ cfssl_server_configdir }}/ca-key.pem"
+    content: "{{ cfssl_server_ca_key }}"
+    owner: "{{ cfssl_server_user }}"
+    group: "{{ cfssl_server_group }}"
+    mode: 0600
+  notify: restart cfssl
+  no_log: true
