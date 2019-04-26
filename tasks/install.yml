@@ -19,13 +19,6 @@
     mode: 0755
   when: (not cfssl_server_installed.stat.exists) or (cfssl_server_installed.stat.exists and cfssl_server_version is version_compare(cfssl_server_current_version.stdout, '>'))
 
-- name: "Download cfssljson"
-  get_url:
-    url: "{{ cfssl_server_cfssljson_url }}"
-    dest: /usr/local/bin/cfssljson
-    mode: 0755
-  when: (not cfssl_server_installed.stat.exists) or (cfssl_server_installed.stat.exists and cfssl_server_version is version_compare(cfssl_server_current_version.stdout, '>'))
-
 - name: Install systemd unit
   template:
     src: cfssl.service.j2

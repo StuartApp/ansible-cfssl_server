@@ -16,4 +16,3 @@
     mode: get
   notify: restart cfssl
   no_log: true
-

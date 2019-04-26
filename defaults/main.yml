@@ -44,7 +44,7 @@ cfssl_server_ca_s3_ca_key: ca-key.pem
 cfssl_server_selfcertificate_hostnames: "localhost,127.0.0.1,cfssl-server"
 cfssl_server_selfcertificate_algo: rsa
 cfssl_server_selfcertificate_size: 2048
-
+cfssl_install_only_cfssljson: false
 # CHANGE THIS!
 cfssl_server_auth_key: "9a618248b64db62d15b300a07b00580b"
 cfssl_server_config:
@@ -80,4 +80,3 @@ cfssl_server_config:
     ca-auth:
       type: standard
       key: "{{ cfssl_server_auth_key }}"
-

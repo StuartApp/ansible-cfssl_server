@@ -1,15 +1,19 @@
+---
 
 - include_tasks: install.yml
+  when: not cfssl_install_only_cfssljson
+- include_tasks: install_cfssljson.yml
 - include_tasks: configure.yml
+  when: not cfssl_install_only_cfssljson
 
 - include_tasks: generate_ca.yml
-  when: cfssl_server_ca_from == "generated"
+  when: cfssl_server_ca_from == "generated" and not cfssl_install_only_cfssljson
 - include_tasks: install_ca.yml
-  when: cfssl_server_ca_from == "vars"
+  when: cfssl_server_ca_from == "vars" and not cfssl_install_only_cfssljson
 - include_tasks: install_ca_s3.yml
-  when: cfssl_server_ca_from == "s3"
+  when: cfssl_server_ca_from == "s3" and not cfssl_install_only_cfssljson
 
 - include_tasks: self_certificate.yml
+  when: not cfssl_install_only_cfssljson
 
 - meta: flush_handlers
-
