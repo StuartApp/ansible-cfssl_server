@@ -1,0 +1,7 @@
+---
+
+- name: "Download cfssljson"
+  get_url:
+    url: "{{ cfssl_server_cfssljson_url }}"
+    dest: /usr/local/bin/cfssljson
+    mode: 0755
