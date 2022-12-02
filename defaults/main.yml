@@ -1,8 +1,15 @@
 ---
+arch_map:
+  i386: '386'
+  x86_64: 'amd64'
+  aarch64: 'arm64'
+  armv7l: 'armv7'
+  armv6l: 'armv6'
+  
 
 cfssl_server_version: 1.2
 cfssl_server_os: linux
-cfssl_server_arch: amd64
+cfssl_server_arch: "{{ arch_map[ansible_architecture] | default(ansible_architecture) }}"
 cfssl_server_cfssl_url: "https://pkg.cfssl.org/R{{ cfssl_server_version }}/cfssl_{{ cfssl_server_os }}-{{ cfssl_server_arch }}"
 cfssl_server_cfssljson_url: "https://pkg.cfssl.org/R{{ cfssl_server_version }}/cfssljson_{{ cfssl_server_os }}-{{ cfssl_server_arch }}"
 
